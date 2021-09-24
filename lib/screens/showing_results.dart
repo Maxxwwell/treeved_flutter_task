@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:treeved_flutter_task/screens/filters.dart';
+import 'package:treeved_flutter_task/screens/tabs/for_rent.dart';
+import 'package:treeved_flutter_task/screens/tabs/for_sale.dart';
 
 class ShowingResults extends StatefulWidget {
   @override
   State<ShowingResults> createState() => _ShowingResultsState();
 }
 
-class _ShowingResultsState extends State<ShowingResults>  with SingleTickerProviderStateMixin {
+class _ShowingResultsState extends State<ShowingResults>
+    with SingleTickerProviderStateMixin {
   TabController? _tabController;
 
   @override
@@ -20,37 +24,48 @@ class _ShowingResultsState extends State<ShowingResults>  with SingleTickerProvi
     _tabController!.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue[50],
-        body: Container(
+        title: TextField(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(color: Colors.white),
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.white)),
+            prefixIcon: GestureDetector(
+              onTap: () {
+                print('go back..');
+              },
+              child: Icon(Icons.arrow_back_sharp),
+            ),
+            hintText: ' Tesla Model 3',
+            hintStyle: TextStyle(
+              color: Theme.of(context).primaryColor,
+            ),
+            suffixIcon: Icon(
+              Icons.cancel,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ),
+      ),
+      backgroundColor: Colors.blue[50],
+      body: SingleChildScrollView(
+        child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              TextField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: const BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(color: Colors.white)),
-                  prefixIcon: Icon(Icons.arrow_back_sharp),
-                  hintText: ' Tesla Model 3',
-                  hintStyle: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  suffixIcon: Icon(
-                    Icons.cancel,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ),
               const SizedBox(height: 10),
               ListTile(
                 title: Text(
@@ -68,15 +83,22 @@ class _ShowingResultsState extends State<ShowingResults>  with SingleTickerProvi
                   ),
                 ),
                 trailing: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon:  Icon(Icons.tune,
-                  color: Theme.of(context).primaryColor,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Filters(),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.tune,
+                    color: Theme.of(context).primaryColor,
                   ),
                   label: Text(
                     'Filters',
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).primaryColor),
+                        fontSize: 18, color: Theme.of(context).primaryColor),
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue[50],
@@ -122,7 +144,6 @@ class _ShowingResultsState extends State<ShowingResults>  with SingleTickerProvi
                       Tab(
                         child: Text('For Rent'),
                       ),
-                     
                     ],
                   ),
                 ),
@@ -130,9 +151,16 @@ class _ShowingResultsState extends State<ShowingResults>  with SingleTickerProvi
               const SizedBox(height: 20),
               SingleChildScrollView(
                 child: Container(
+                  color: Colors.white,
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.63,
-                  color: Colors.red
+                  child: TabBarView(
+                      controller: _tabController,
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        ForSaleTab(),
+                        ForRentTab(),
+                      ]),
                 ),
               )
             ],
